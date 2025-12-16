@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                  https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="App\Analytics\Domain\Model\PerformanceReport" table="performance_reports">
+        <id name="id" type="string" length="36">
+            <generator strategy="NONE"/>
+        </id>
+
+        <field name="userId" column="user_id" type="string" length="36"/>
+        <field name="type" type="string" length="50"/>
+        <field name="period" type="string" length="20"/>
+        <field name="startDate" column="start_date" type="datetime_immutable" nullable="true"/>
+        <field name="endDate" column="end_date" type="datetime_immutable"/>
+        <field name="metrics" type="json" nullable="true"/>
+        <field name="allocation" type="json" nullable="true"/>
+        <field name="data" type="json"/>
+        <field name="createdAt" column="created_at" type="datetime_immutable"/>
+
+        <indexes>
+            <index name="idx_user_id" columns="user_id"/>
+            <index name="idx_type" columns="type"/>
+            <index name="idx_created_at" columns="created_at"/>
+        </indexes>
+    </entity>
+</doctrine-mapping>
