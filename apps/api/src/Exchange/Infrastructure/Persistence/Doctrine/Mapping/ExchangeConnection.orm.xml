@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                  https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="App\Exchange\Domain\Model\ExchangeConnection" table="exchange_connections">
+        <id name="id" type="exchange_connection_id" column="id"/>
+        
+        <field name="userId" type="user_id" column="user_id" nullable="false"/>
+        <field name="exchangeName" type="string" column="exchange_name" length="50" nullable="false"/>
+        <field name="label" type="string" column="label" length="255" nullable="true"/>
+        <field name="isActive" type="boolean" column="is_active" nullable="false"/>
+        <field name="connectedAt" type="datetime_immutable" column="connected_at" nullable="false"/>
+        <field name="lastSyncAt" type="datetime_immutable" column="last_sync_at" nullable="true"/>
+        
+        <embedded name="credentials" class="App\Exchange\Domain\ValueObject\ApiCredentials">
+            <field name="apiKey" type="text" column="api_key" nullable="false"/>
+            <field name="apiSecret" type="text" column="api_secret" nullable="false"/>
+        </embedded>
+    </entity>
+
+</doctrine-mapping>

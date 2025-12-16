@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                  https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="App\Alert\Domain\Model\PriceAlert" table="price_alerts" repository-class="App\Alert\Infrastructure\Persistence\Doctrine\DoctrinePriceAlertRepository">
+        <id name="id" type="string" column="id">
+            <generator strategy="NONE"/>
+        </id>
+
+        <field name="userId" type="string" column="user_id" length="36" nullable="false"/>
+        <field name="type" type="string" length="50" nullable="false"/>
+        <field name="symbol" type="string" length="20" nullable="true"/>
+        <field name="condition" type="json" nullable="false"/>
+        <field name="status" type="string" length="20" nullable="false"/>
+        <field name="notificationChannels" type="json" column="notification_channels" nullable="false"/>
+        <field name="message" type="text" nullable="true"/>
+        <field name="triggeredAt" type="datetime_immutable" column="triggered_at" nullable="true"/>
+        <field name="expiresAt" type="datetime_immutable" column="expires_at" nullable="true"/>
+        <field name="createdAt" type="datetime_immutable" column="created_at" nullable="false"/>
+
+        <indexes>
+            <index name="idx_alerts_user_id" columns="user_id"/>
+            <index name="idx_alerts_status" columns="status"/>
+            <index name="idx_alerts_symbol" columns="symbol"/>
+            <index name="idx_alerts_type" columns="type"/>
+            <index name="idx_alerts_expires_at" columns="expires_at"/>
+        </indexes>
+    </entity>
+</doctrine-mapping>

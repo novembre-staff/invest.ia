@@ -1,0 +1,101 @@
+parameters:
+
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+
+    # Identity Context
+    App\Identity\:
+        resource: '../src/Identity/'
+        exclude:
+            - '../src/Identity/Domain/Model/'
+            - '../src/Identity/Domain/ValueObject/'
+            - '../src/Identity/Domain/Event/'
+            - '../src/Identity/Application/Command/'
+            - '../src/Identity/Application/DTO/'
+
+    # Repository bindings
+    App\Identity\Domain\Repository\UserRepositoryInterface:
+        class: App\Identity\Infrastructure\Persistence\Doctrine\UserDoctrineRepository
+
+    # Shared Context
+    App\Shared\:
+        resource: '../src/Shared/'
+
+    # Market Context
+    App\Market\:
+        resource: '../src/Market/'
+        exclude:
+            - '../src/Market/Domain/Model/'
+            - '../src/Market/Domain/ValueObject/'
+            - '../src/Market/Domain/Event/'
+
+    # News Context
+    App\News\:
+        resource: '../src/News/'
+        exclude:
+            - '../src/News/Domain/Model/'
+            - '../src/News/Domain/ValueObject/'
+            - '../src/News/Domain/Event/'
+
+    # Exchange Context
+    App\Exchange\:
+        resource: '../src/Exchange/'
+        exclude:
+            - '../src/Exchange/Domain/Model/'
+            - '../src/Exchange/Domain/ValueObject/'
+            - '../src/Exchange/Domain/Event/'
+
+    # Portfolio Context
+    App\Portfolio\:
+        resource: '../src/Portfolio/'
+        exclude:
+            - '../src/Portfolio/Domain/Model/'
+            - '../src/Portfolio/Domain/ValueObject/'
+            - '../src/Portfolio/Domain/Event/'
+
+    # Trading Context
+    App\Trading\:
+        resource: '../src/Trading/'
+        exclude:
+            - '../src/Trading/Domain/Model/'
+            - '../src/Trading/Domain/ValueObject/'
+            - '../src/Trading/Domain/Event/'
+
+    # Bots Context
+    App\Bots\:
+        resource: '../src/Bots/'
+        exclude:
+            - '../src/Bots/Domain/Model/'
+            - '../src/Bots/Domain/ValueObject/'
+            - '../src/Bots/Domain/Event/'
+
+    # Risk Context
+    App\Risk\:
+        resource: '../src/Risk/'
+        exclude:
+            - '../src/Risk/Domain/Model/'
+            - '../src/Risk/Domain/ValueObject/'
+            - '../src/Risk/Domain/Event/'
+
+    # Analytics Context
+    App\Analytics\:
+        resource: '../src/Analytics/'
+        exclude:
+            - '../src/Analytics/Domain/Model/'
+            - '../src/Analytics/Domain/ValueObject/'
+            - '../src/Analytics/Domain/Event/'
+
+    # Audit Context
+    App\Audit\:
+        resource: '../src/Audit/'
+        exclude:
+            - '../src/Audit/Domain/Model/'
+            - '../src/Audit/Domain/ValueObject/'
+            - '../src/Audit/Domain/Event/'
+
+    # Controllers
+    App\Identity\UI\Http\Controller\:
+        resource: '../src/Identity/UI/Http/Controller/'
+        tags: ['controller.service_arguments']

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                  https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="App\Identity\Domain\Model\User" table="users" repository-class="App\Identity\Infrastructure\Persistence\Doctrine\UserDoctrineRepository">
+        
+        <!-- ID -->
+        <id name="id" type="string" column="id">
+            <generator strategy="NONE"/>
+        </id>
+        
+        <!-- Email (embedded value object) -->
+        <field name="email" type="string" length="255" unique="true" nullable="false"/>
+        
+        <!-- Password (embedded value object) -->
+        <field name="password" type="string" length="255" nullable="false" column="password_hash"/>
+        
+        <!-- Basic fields -->
+        <field name="firstName" type="string" length="100" nullable="false" column="first_name"/>
+        <field name="lastName" type="string" length="100" nullable="false" column="last_name"/>
+        
+        <!-- Status (enum) -->
+        <field name="status" type="string" length="50" nullable="false" column="status"/>
+        
+        <!-- MFA -->
+        <field name="mfaEnabled" type="boolean" nullable="false" column="mfa_enabled"/>
+        <field name="mfaSecret" type="string" length="255" nullable="true" column="mfa_secret"/>
+        
+        <!-- Preferences (JSON) -->
+        <field name="preferences" type="json" nullable="false" column="preferences"/>
+        
+        <!-- Timestamps -->
+        <field name="emailVerifiedAt" type="datetime_immutable" nullable="true" column="email_verified_at"/>
+        <field name="createdAt" type="datetime_immutable" nullable="false" column="created_at"/>
+        <field name="updatedAt" type="datetime_immutable" nullable="false" column="updated_at"/>
+        
+        <!-- Indexes -->
+        <indexes>
+            <index name="idx_user_email" columns="email"/>
+            <index name="idx_user_status" columns="status"/>
+        </indexes>
+        
+    </entity>
+    
+</doctrine-mapping>

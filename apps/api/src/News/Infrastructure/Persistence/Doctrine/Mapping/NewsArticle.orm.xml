@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                  https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="App\News\Domain\Model\NewsArticle" table="news_articles" repository-class="App\News\Infrastructure\Persistence\Doctrine\DoctrineNewsArticleRepository">
+        <id name="id" type="string" column="id">
+            <generator strategy="NONE"/>
+        </id>
+
+        <field name="title" type="string" length="500" nullable="false"/>
+        <field name="summary" type="text" nullable="false"/>
+        <field name="content" type="text" nullable="true"/>
+        <field name="sourceUrl" type="string" column="source_url" length="1000" nullable="false" unique="true"/>
+        <field name="sourceName" type="string" column="source_name" length="255" nullable="false"/>
+        <field name="category" type="string" length="50" nullable="false"/>
+        <field name="relatedSymbols" type="json" column="related_symbols" nullable="false"/>
+        <field name="importanceScore" type="integer" column="importance_score" nullable="false"/>
+        <field name="publishedAt" type="datetime_immutable" column="published_at" nullable="false"/>
+        <field name="imageUrl" type="string" column="image_url" length="1000" nullable="true"/>
+        <field name="createdAt" type="datetime_immutable" column="created_at" nullable="false"/>
+
+        <indexes>
+            <index name="idx_news_published_at" columns="published_at"/>
+            <index name="idx_news_category" columns="category"/>
+            <index name="idx_news_importance_score" columns="importance_score"/>
+        </indexes>
+    </entity>
+</doctrine-mapping>

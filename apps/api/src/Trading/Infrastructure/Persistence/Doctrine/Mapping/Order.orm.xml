@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                  https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="App\Trading\Domain\Model\Order" table="orders" repository-class="App\Trading\Infrastructure\Persistence\Doctrine\DoctrineOrderRepository">
+        <id name="id" type="string" column="id">
+            <generator strategy="NONE"/>
+        </id>
+
+        <field name="userId" type="string" column="user_id" length="36" nullable="false"/>
+        <field name="symbol" type="string" length="20" nullable="false"/>
+        <field name="type" type="string" length="30" nullable="false"/>
+        <field name="side" type="string" length="10" nullable="false"/>
+        <field name="status" type="string" length="30" nullable="false"/>
+        <field name="quantity" type="decimal" precision="18" scale="8" nullable="false"/>
+        <field name="price" type="decimal" precision="18" scale="8" nullable="true"/>
+        <field name="stopPrice" type="decimal" precision="18" scale="8" column="stop_price" nullable="true"/>
+        <field name="timeInForce" type="string" column="time_in_force" length="10" nullable="false"/>
+        <field name="executedQuantity" type="decimal" column="executed_quantity" precision="18" scale="8" nullable="false"/>
+        <field name="cumulativeQuoteQuantity" type="decimal" column="cumulative_quote_quantity" precision="18" scale="8" nullable="false"/>
+        <field name="exchangeOrderId" type="string" column="exchange_order_id" length="100" nullable="true"/>
+        <field name="clientOrderId" type="string" column="client_order_id" length="100" nullable="true"/>
+        <field name="executedAt" type="datetime_immutable" column="executed_at" nullable="true"/>
+        <field name="rejectReason" type="text" column="reject_reason" nullable="true"/>
+        <field name="createdAt" type="datetime_immutable" column="created_at" nullable="false"/>
+        <field name="updatedAt" type="datetime_immutable" column="updated_at" nullable="false"/>
+
+        <indexes>
+            <index name="idx_orders_user_id" columns="user_id"/>
+            <index name="idx_orders_symbol" columns="symbol"/>
+            <index name="idx_orders_status" columns="status"/>
+            <index name="idx_orders_exchange_order_id" columns="exchange_order_id"/>
+            <index name="idx_orders_created_at" columns="created_at"/>
+            <index name="idx_orders_user_symbol" columns="user_id,symbol"/>
+        </indexes>
+    </entity>
+</doctrine-mapping>

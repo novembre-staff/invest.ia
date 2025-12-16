@@ -1,0 +1,114 @@
+doctrine:
+    dbal:
+        url: '%env(resolve:DATABASE_URL)%'
+        driver: 'pdo_pgsql'
+        server_version: '15'
+        charset: utf8
+        
+        # Schema filter to exclude messenger tables from migrations
+        schema_filter: ~^(?!messenger_messages)~
+
+    orm:
+        auto_generate_proxy_classes: true
+        enable_lazy_ghost_objects: true
+        report_fields_where_declared: true
+        validate_xml_mapping: true
+        naming_strategy: doctrine.orm.naming_strategy.underscore_number_aware
+        auto_mapping: true
+        
+        mappings:
+            Identity:
+                is_bundle: false
+                type: xml
+                dir: '%kernel.project_dir%/src/Identity/Infrastructure/Persistence/Doctrine/Mapping'
+                prefix: 'App\Identity\Domain\Model'
+                alias: Identity
+            
+            Market:
+                is_bundle: false
+                type: xml
+                dir: '%kernel.project_dir%/src/Market/Infrastructure/Persistence/Doctrine/Mapping'
+                prefix: 'App\Market\Domain\Model'
+                alias: Market
+            
+            News:
+                is_bundle: false
+                type: xml
+                dir: '%kernel.project_dir%/src/News/Infrastructure/Persistence/Doctrine/Mapping'
+                prefix: 'App\News\Domain\Model'
+                alias: News
+            
+            Exchange:
+                is_bundle: false
+                type: xml
+                dir: '%kernel.project_dir%/src/Exchange/Infrastructure/Persistence/Doctrine/Mapping'
+                prefix: 'App\Exchange\Domain\Model'
+                alias: Exchange
+            
+            Portfolio:
+                is_bundle: false
+                type: xml
+                dir: '%kernel.project_dir%/src/Portfolio/Infrastructure/Persistence/Doctrine/Mapping'
+                prefix: 'App\Portfolio\Domain\Model'
+                alias: Portfolio
+            
+            Trading:
+                is_bundle: false
+                type: xml
+                dir: '%kernel.project_dir%/src/Trading/Infrastructure/Persistence/Doctrine/Mapping'
+                prefix: 'App\Trading\Domain\Model'
+                alias: Trading
+            
+            Bots:
+                is_bundle: false
+                type: xml
+                dir: '%kernel.project_dir%/src/Bots/Infrastructure/Persistence/Doctrine/Mapping'
+                prefix: 'App\Bots\Domain\Model'
+                alias: Bots
+            
+            Risk:
+                is_bundle: false
+                type: xml
+                dir: '%kernel.project_dir%/src/Risk/Infrastructure/Persistence/Doctrine/Mapping'
+                prefix: 'App\Risk\Domain\Model'
+                alias: Risk
+            
+            Analytics:
+                is_bundle: false
+                type: xml
+                dir: '%kernel.project_dir%/src/Analytics/Infrastructure/Persistence/Doctrine/Mapping'
+                prefix: 'App\Analytics\Domain\Model'
+                alias: Analytics
+            
+            Audit:
+                is_bundle: false
+                type: xml
+                dir: '%kernel.project_dir%/src/Audit/Infrastructure/Persistence/Doctrine/Mapping'
+                prefix: 'App\Audit\Domain\Model'
+                alias: Audit
+
+when@test:
+    doctrine:
+        dbal:
+            # Use in-memory database for tests
+            dbname_suffix: '_test%env(default::TEST_TOKEN)%'
+
+when@prod:
+    doctrine:
+        orm:
+            auto_generate_proxy_classes: false
+            proxy_dir: '%kernel.build_dir%/doctrine/orm/Proxies'
+            query_cache_driver:
+                type: pool
+                pool: doctrine.system_cache_pool
+            result_cache_driver:
+                type: pool
+                pool: doctrine.result_cache_pool
+
+    framework:
+        cache:
+            pools:
+                doctrine.result_cache_pool:
+                    adapter: cache.app
+                doctrine.system_cache_pool:
+                    adapter: cache.system

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                  https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="App\Strategy\Domain\Model\TradingStrategy" table="trading_strategies">
+        <id name="id" type="string" length="36">
+            <generator strategy="NONE"/>
+        </id>
+
+        <field name="userId" type="string" length="36" column="user_id"/>
+        <field name="name" type="string" length="100"/>
+        <field name="description" type="text" nullable="true"/>
+        <field name="type" type="string" length="50"/>
+        <field name="status" type="string" length="50"/>
+        <field name="symbols" type="json"/>
+        <field name="timeFrame" type="string" length="10" column="time_frame"/>
+        <field name="indicators" type="json"/>
+        <field name="entryRules" type="json" column="entry_rules"/>
+        <field name="exitRules" type="json" column="exit_rules"/>
+        <field name="positionSizePercent" type="float" nullable="true" column="position_size_percent"/>
+        <field name="maxDrawdownPercent" type="float" nullable="true" column="max_drawdown_percent"/>
+        <field name="stopLossPercent" type="float" nullable="true" column="stop_loss_percent"/>
+        <field name="takeProfitPercent" type="float" nullable="true" column="take_profit_percent"/>
+        <field name="backtestResults" type="json" nullable="true" column="backtest_results"/>
+        <field name="lastBacktestedAt" type="datetime_immutable" nullable="true" column="last_backtested_at"/>
+        <field name="activatedAt" type="datetime_immutable" nullable="true" column="activated_at"/>
+        <field name="stoppedAt" type="datetime_immutable" nullable="true" column="stopped_at"/>
+        <field name="createdAt" type="datetime_immutable" column="created_at"/>
+        <field name="updatedAt" type="datetime_immutable" column="updated_at"/>
+
+        <indexes>
+            <index name="idx_trading_strategies_user_id" columns="user_id"/>
+            <index name="idx_trading_strategies_status" columns="status"/>
+            <index name="idx_trading_strategies_type" columns="type"/>
+            <index name="idx_trading_strategies_created_at" columns="created_at"/>
+            <index name="idx_trading_strategies_user_status" columns="user_id,status"/>
+        </indexes>
+    </entity>
+</doctrine-mapping>

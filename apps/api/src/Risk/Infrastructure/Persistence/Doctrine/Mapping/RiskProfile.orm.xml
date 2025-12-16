@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                  https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="App\Risk\Domain\Model\RiskProfile" table="risk_profiles">
+        <id name="id" type="string" length="36">
+            <generator strategy="NONE"/>
+        </id>
+
+        <field name="userId" type="string" length="36" column="user_id" unique="true"/>
+        <field name="riskLevel" type="string" length="50" column="risk_level"/>
+        <field name="maxPositionSizePercent" type="float" nullable="true" column="max_position_size_percent"/>
+        <field name="maxPortfolioExposurePercent" type="float" nullable="true" column="max_portfolio_exposure_percent"/>
+        <field name="maxDailyLossPercent" type="float" nullable="true" column="max_daily_loss_percent"/>
+        <field name="maxDrawdownPercent" type="float" nullable="true" column="max_drawdown_percent"/>
+        <field name="maxLeverage" type="float" nullable="true" column="max_leverage"/>
+        <field name="maxConcentrationPercent" type="float" nullable="true" column="max_concentration_percent"/>
+        <field name="maxTradesPerDay" type="integer" nullable="true" column="max_trades_per_day"/>
+        <field name="requireApprovalAboveLimit" type="boolean" column="require_approval_above_limit"/>
+        <field name="notes" type="text" nullable="true"/>
+        <field name="createdAt" type="datetime_immutable" column="created_at"/>
+        <field name="updatedAt" type="datetime_immutable" column="updated_at"/>
+
+        <indexes>
+            <index name="idx_risk_profiles_user_id" columns="user_id"/>
+            <index name="idx_risk_profiles_risk_level" columns="risk_level"/>
+        </indexes>
+    </entity>
+</doctrine-mapping>

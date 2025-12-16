@@ -1,0 +1,105 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: investia_postgres
+    environment:
+      POSTGRES_DB: investia
+      POSTGRES_USER: investia
+      POSTGRES_PASSWORD: investia_secret
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - investia_network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U investia"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: investia_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - investia_network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build:
+      context: ../../apps/api
+      dockerfile: Dockerfile
+    container_name: investia_api
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      APP_ENV: dev
+      DATABASE_URL: postgresql://investia:investia_secret@postgres:5432/investia?serverVersion=15&charset=utf8
+      REDIS_URL: redis://redis:6379
+    ports:
+      - "8000:8000"
+    volumes:
+      - ../../apps/api:/app
+      - api_vendor:/app/vendor
+    networks:
+      - investia_network
+    command: symfony server:start
+
+  worker:
+    build:
+      context: ../../apps/api
+      dockerfile: Dockerfile
+    container_name: investia_worker
+    depends_on:
+      - api
+    environment:
+      APP_ENV: dev
+      DATABASE_URL: postgresql://investia:investia_secret@postgres:5432/investia?serverVersion=15&charset=utf8
+      REDIS_URL: redis://redis:6379
+    volumes:
+      - ../../apps/api:/app
+      - api_vendor:/app/vendor
+    networks:
+      - investia_network
+    command: php bin/console messenger:consume async -vv
+
+  web:
+    build:
+      context: ../../apps/web
+      dockerfile: Dockerfile
+    container_name: investia_web
+    depends_on:
+      - api
+    ports:
+      - "3000:3000"
+    volumes:
+      - ../../apps/web:/app
+      - web_node_modules:/app/node_modules
+    networks:
+      - investia_network
+    environment:
+      VITE_API_URL: http://localhost:8000
+    command: npm run dev -- --host
+
+volumes:
+  postgres_data:
+  redis_data:
+  api_vendor:
+  web_node_modules:
+
+networks:
+  investia_network:
+    driver: bridge

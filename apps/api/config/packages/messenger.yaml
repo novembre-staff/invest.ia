@@ -1,0 +1,42 @@
+framework:
+    messenger:
+        failure_transport: failed
+
+        transports:
+            # Asynchronous transport
+            async:
+                dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
+                options:
+                    auto_setup: true
+                retry_strategy:
+                    max_retries: 3
+                    delay: 1000
+                    multiplier: 2
+                    max_delay: 0
+            
+            # Failed messages transport
+            failed:
+                dsn: 'doctrine://default?queue_name=failed'
+
+        routing:
+            # Domain Events - async processing
+            'App\Identity\Domain\Event\*': async
+            'App\Market\Domain\Event\*': async
+            'App\News\Domain\Event\*': async
+            'App\Exchange\Domain\Event\*': async
+            'App\Portfolio\Domain\Event\*': async
+            'App\Trading\Domain\Event\*': async
+            'App\Bots\Domain\Event\*': async
+            'App\Risk\Domain\Event\*': async
+            'App\Analytics\Domain\Event\*': async
+            'App\Audit\Domain\Event\*': async
+            
+            # Commands - sync by default (can be changed per command)
+            # 'App\*\Application\Command\*': sync
+
+when@test:
+    framework:
+        messenger:
+            transports:
+                async:
+                    dsn: 'in-memory://'
