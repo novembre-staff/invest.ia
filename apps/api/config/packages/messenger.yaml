@@ -30,9 +30,16 @@ framework:
             'App\Risk\Domain\Event\*': async
             'App\Analytics\Domain\Event\*': async
             'App\Audit\Domain\Event\*': async
+            'App\Alert\Domain\Event\*': async
             
             # Commands - sync by default (can be changed per command)
             # 'App\*\Application\Command\*': sync
+        
+        buses:
+            messenger.bus.default:
+                middleware:
+                    - validation
+                    - doctrine_transaction
 
 when@test:
     framework:

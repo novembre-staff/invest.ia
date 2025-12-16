@@ -19,6 +19,9 @@ services:
     App\Identity\Domain\Repository\UserRepositoryInterface:
         class: App\Identity\Infrastructure\Persistence\Doctrine\UserDoctrineRepository
 
+    App\Bots\Domain\Repository\ProposalRepositoryInterface:
+        class: App\Bots\Infrastructure\Persistence\Doctrine\ProposalDoctrineRepository
+
     # Shared Context
     App\Shared\:
         resource: '../src/Shared/'
@@ -94,8 +97,78 @@ services:
             - '../src/Audit/Domain/Model/'
             - '../src/Audit/Domain/ValueObject/'
             - '../src/Audit/Domain/Event/'
+            - '../src/Audit/Application/Command/'
+            - '../src/Audit/Application/Query/'
+            - '../src/Audit/Application/DTO/'
+
+    App\Audit\Domain\Repository\AuditLogRepositoryInterface:
+        class: App\Audit\Infrastructure\Persistence\Doctrine\DoctrineAuditLogRepository
+
+    # Alert Context
+    App\Alert\:
+        resource: '../src/Alert/'
+        exclude:
+            - '../src/Alert/Domain/Model/'
+            - '../src/Alert/Domain/ValueObject/'
+            - '../src/Alert/Domain/Event/'
+            - '../src/Alert/Application/Command/'
+            - '../src/Alert/Application/Query/'
+            - '../src/Alert/Application/DTO/'
+
+    # Notification Services
+    App\Alert\Domain\Service\NotificationServiceInterface:
+        class: App\Alert\Infrastructure\Service\MultiChannelNotificationService
+
+    App\Alert\Infrastructure\Service\EmailNotificationService:
+        arguments:
+            $fromEmail: '%env(MAIL_FROM)%'
+            $fromName: 'invest.ia'
+
+    App\Alert\Infrastructure\Service\PushNotificationService:
+        arguments:
+            $serverKey: '%env(FCM_SERVER_KEY)%'
+
+    App\Alert\Infrastructure\Service\SmsNotificationService:
+        arguments:
+            $accountSid: '%env(TWILIO_ACCOUNT_SID)%'
+            $authToken: '%env(TWILIO_AUTH_TOKEN)%'
+            $fromNumber: '%env(TWILIO_FROM_NUMBER)%'
+
+    App\Alert\Infrastructure\Service\DiscordNotificationService:
+        arguments:
+            $webhookUrl: '%env(DISCORD_WEBHOOK_URL)%'
+
+    App\Alert\Infrastructure\Service\TelegramNotificationService:
+        arguments:
+            $botToken: '%env(TELEGRAM_BOT_TOKEN)%'
+
+    # Sentiment Analyzer
+    App\News\Domain\Service\SentimentAnalyzerInterface:
+        class: App\News\Infrastructure\Service\SimpleSentimentAnalyzer
+        # Pour production avec OpenAI:
+        # class: App\News\Infrastructure\Service\OpenAISentimentAnalyzer
+        # arguments:
+        #     $apiKey: '%env(OPENAI_API_KEY)%'
+
+    # Realtime Service (WebSocket)
+    App\Shared\Domain\Service\RealtimeServiceInterface:
+        class: App\Shared\Infrastructure\Service\MercureRealtimeService
+        arguments:
+            $mercureUrl: '%env(MERCURE_URL)%'
+            $mercureJwtSecret: '%env(MERCURE_JWT_SECRET)%'
+
+    # Rate Limiters
+    api_general_limiter:
+        class: Symfony\Component\RateLimiter\RateLimiterFactory
+        arguments:
+            - 'api_general'
+            - '@rate_limiter.cache'
 
     # Controllers
     App\Identity\UI\Http\Controller\:
         resource: '../src/Identity/UI/Http/Controller/'
+        tags: ['controller.service_arguments']
+
+    App\Shared\UI\Http\Controller\:
+        resource: '../src/Shared/UI/Http/Controller/'
         tags: ['controller.service_arguments']

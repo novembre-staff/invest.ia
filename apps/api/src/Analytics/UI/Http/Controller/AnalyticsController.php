@@ -8,13 +8,14 @@ use App\Analytics\Application\Command\GenerateReport;
 use App\Analytics\Application\Query\GetPerformanceReport;
 use App\Analytics\Application\Query\GetPortfolioStatistics;
 use App\Analytics\Application\Query\GetUserReports;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Messenger\HandleTrait;
 use Symfony\Component\Messenger\MessageBusInterface;
 
-class AnalyticsController
+class AnalyticsController extends AbstractController
 {
     use HandleTrait;
 
@@ -25,9 +26,12 @@ class AnalyticsController
 
     public function getStatistics(Request $request): JsonResponse
     {
+        $userId = $this->getUser()?->getUserIdentifier();
+        if ($userId === null) {
+            return new JsonResponse(['error' => 'Unauthorized'], Response::HTTP_UNAUTHORIZED);
+        }
+
         try {
-            // TODO: Get userId from authenticated user
-            $userId = $request->query->get('user_id');
             $period = $request->query->get('period', '30d');
 
             $query = new GetPortfolioStatistics($userId, $period);
@@ -41,9 +45,12 @@ class AnalyticsController
 
     public function getUserReports(Request $request): JsonResponse
     {
+        $userId = $this->getUser()?->getUserIdentifier();
+        if ($userId === null) {
+            return new JsonResponse(['error' => 'Unauthorized'], Response::HTTP_UNAUTHORIZED);
+        }
+
         try {
-            // TODO: Get userId from authenticated user
-            $userId = $request->query->get('user_id');
             $type = $request->query->get('type');
             $limit = (int) $request->query->get('limit', 20);
 
@@ -58,9 +65,12 @@ class AnalyticsController
 
     public function getReport(string $id, Request $request): JsonResponse
     {
+        $userId = $this->getUser()?->getUserIdentifier();
+        if ($userId === null) {
+            return new JsonResponse(['error' => 'Unauthorized'], Response::HTTP_UNAUTHORIZED);
+        }
+
         try {
-            // TODO: Get userId from authenticated user
-            $userId = $request->query->get('user_id');
 
             $query = new GetPerformanceReport($id, $userId);
             $report = $this->handle($query);
@@ -79,11 +89,13 @@ class AnalyticsController
 
     public function generateReport(Request $request): JsonResponse
     {
+        $userId = $this->getUser()?->getUserIdentifier();
+        if ($userId === null) {
+            return new JsonResponse(['error' => 'Unauthorized'], Response::HTTP_UNAUTHORIZED);
+        }
+
         try {
             $data = json_decode($request->getContent(), true);
-
-            // TODO: Get userId from authenticated user
-            $userId = $data['user_id'];
 
             $command = new GenerateReport(
                 userId: $userId,

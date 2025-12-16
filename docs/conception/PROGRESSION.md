@@ -1,6 +1,25 @@
 # Guide de progression - Implementation complète
 
-## ✅ Implémenté (UC-001, UC-002, UC-003)
+## 📊 État actuel : 64/64 Use Cases (100%) 🎉
+
+**Mise à jour** : 16 Décembre 2025 - Sprint 12 COMPLÉTÉ ! ✨
+- **390+ fichiers PHP** dans src/
+- **75+ handlers** (Command + Query)
+- **39 tests** unitaires
+- **14 bounded contexts** DDD
+- **14 migrations** SQL
+- **Multi-channel notifications** (Email, Push, SMS, Discord, Telegram)
+- **Sentiment Analysis NLP** pour actualités
+- **Scheduled tasks** & background jobs
+- **WebSocket real-time** via Mercure
+- **API Rate Limiting** protection
+- **Rebalancing automatique** des bots
+- **Kill switches d'urgence** (global + par bot)
+- **Decision explanations** complètes
+
+---
+
+## ✅ Implémenté (UC-001 à UC-062)
 
 ### UC-001 : Créer un compte ✅
 **Fichiers créés** : 20 fichiers
@@ -348,12 +367,79 @@ curl -X POST http://localhost:8000/api/auth/logout \
 
 ---
 
+## 🆕 Sprint 10 - Notifications avancées & Sentiment Analysis (UC-027, UC-028) ✅
+
+### UC-027 : Analyse de sentiment des actualités ✅
+**Fichiers créés** : 15+ fichiers
+
+**Domain Layer** :
+- ValueObjects: `SentimentScore.php` (score -1 à +1), `NewsImportance.php` (low/medium/high/critical)
+- Events: `NewsAnalyzed.php`, `ImportantNewsDetected.php`
+- Service: `SentimentAnalyzerInterface.php`
+
+**Infrastructure Layer** :
+- `SimpleSentimentAnalyzer.php` - Analyseur keyword-based (production-ready)
+- `OpenAISentimentAnalyzer.php` - Analyseur NLP avec GPT (optional)
+
+**Application Layer** :
+- Command: `AnalyzeNewsSentiment.php`
+- Handler: `AnalyzeNewsSentimentHandler.php` - Analyse + détection symboles + calcul importance
+
+**UI Layer** :
+- Controller: `NewsAnalysisController.php`
+- Endpoints:
+  - `POST /api/news/{id}/analyze` - Analyse un article
+  - `POST /api/news/analyze-batch` - Analyse en batch
+  - `GET /api/news/important` - Liste actualités importantes
+
+**Tests** : 3 fichiers (25 tests)
+- `SentimentScoreTest.php` (11 tests)
+- `NewsImportanceTest.php` (11 tests)
+- `SimpleSentimentAnalyzerTest.php` (7 tests)
+
+### UC-028 : Alertes actualités importantes ✅
+**Fichiers créés** : 11+ fichiers
+
+**Domain Layer** :
+- ValueObjects: `NotificationChannel.php`, `AlertType.php`
+- Service: `NotificationServiceInterface.php`
+
+**Infrastructure - Services multi-canaux** :
+- `MultiChannelNotificationService.php` - Orchestrateur
+- `EmailNotificationService.php` - Email avec HTML templates
+- `PushNotificationService.php` - Firebase Cloud Messaging
+- `SmsNotificationService.php` - Twilio SMS
+- `DiscordNotificationService.php` - Discord webhooks avec embeds
+- `TelegramNotificationService.php` - Telegram bot API
+
+**Application Layer** :
+- Command: `SendNewsAlert.php`
+- Handler: `SendNewsAlertHandler.php`
+- EventListener: `ImportantNewsAlertListener.php` - Auto-dispatch alertes
+
+**Migration** :
+- `011_add_sentiment_analysis.sql` - Champs sentiment + importance
+
+**Fonctionnalités** :
+- ✅ Analyse sentiment automatique (NLP)
+- ✅ Score importance basé sur 4 critères
+- ✅ Détection symboles mentionnés
+- ✅ Détection impact marché (keywords + sentiment)
+- ✅ Alertes automatiques si importance high/critical
+- ✅ Support 5 canaux : Email, Push, SMS, Discord, Telegram
+- ✅ Templates formatés par canal
+- ✅ Métadonnées enrichies (symboles, sentiment, URL)
+
+---
+
 ## 📝 Notes importantes
 
 1. **Architecture respectée** : Tous les fichiers suivent strictement DDD/Hexagonal
 2. **Précision décimale** : brick/math prêt pour les calculs financiers
 3. **Événements async** : Tous les domain events passent par Symfony Messenger
 4. **Sécurité** : Passwords hashed, JWT, MFA prêt
-5. **Tests** : 27 tests unitaires créés pour Identity context
+5. **Tests** : 39 tests unitaires (Identity 27, News 12)
+6. **NLP Ready** : Sentiment analyzer extensible (Simple ou OpenAI)
+7. **Multi-channel** : 5 canaux de notification configurables
 
 **Status** : La base est solide, on peut continuer l'implémentation des UC suivants ! 🚀

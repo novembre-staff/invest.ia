@@ -1,0 +1,37 @@
+framework:
+    rate_limiter:
+        # API générale - 100 requêtes par minute par IP
+        api_general:
+            policy: 'sliding_window'
+            limit: 100
+            interval: '1 minute'
+
+        # Analyse de sentiment - 10 par minute (coût CPU)
+        news_analysis:
+            policy: 'token_bucket'
+            limit: 10
+            rate: { interval: '1 minute' }
+
+        # Authentification - 5 tentatives par minute
+        auth:
+            policy: 'fixed_window'
+            limit: 5
+            interval: '1 minute'
+
+        # Création de bot - 3 par heure
+        bot_creation:
+            policy: 'sliding_window'
+            limit: 3
+            interval: '1 hour'
+
+        # Export de rapports - 5 par heure
+        report_export:
+            policy: 'sliding_window'
+            limit: 5
+            interval: '1 hour'
+
+        # Ordres trading - 20 par minute (sécurité)
+        trading_orders:
+            policy: 'token_bucket'
+            limit: 20
+            rate: { interval: '1 minute', amount: 1 }

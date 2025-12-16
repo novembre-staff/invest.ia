@@ -26,5 +26,12 @@ interface WatchlistRepositoryInterface
      */
     public function findByUserIdAndName(UserId $userId, string $name): ?Watchlist;
 
+    /**
+     * Find all watchlists containing a specific symbol
+     * 
+     * @return Watchlist[]
+     */
+    public function findBySymbol(string $symbol): array;
+
     public function delete(Watchlist $watchlist): void;
 }

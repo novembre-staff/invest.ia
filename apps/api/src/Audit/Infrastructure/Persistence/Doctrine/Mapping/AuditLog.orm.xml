@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                  https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="App\Audit\Domain\Model\AuditLog" table="audit_logs" repository-class="App\Audit\Infrastructure\Persistence\Doctrine\DoctrineAuditLogRepository">
+        
+        <!-- ID -->
+        <id name="id" type="string" column="id">
+            <generator strategy="NONE"/>
+        </id>
+        
+        <!-- User ID -->
+        <field name="userId" type="string" length="36" nullable="false" column="user_id"/>
+        
+        <!-- Action -->
+        <field name="action" type="string" length="100" nullable="false" column="action"/>
+        
+        <!-- Entity -->
+        <field name="entityType" type="string" length="100" nullable="false" column="entity_type"/>
+        <field name="entityId" type="string" length="100" nullable="false" column="entity_id"/>
+        
+        <!-- Severity -->
+        <field name="severity" type="string" length="20" nullable="false" column="severity"/>
+        
+        <!-- Metadata (JSON) -->
+        <field name="metadata" type="json" nullable="false" column="metadata"/>
+        
+        <!-- Request context -->
+        <field name="ipAddress" type="string" length="45" nullable="true" column="ip_address"/>
+        <field name="userAgent" type="text" nullable="true" column="user_agent"/>
+        
+        <!-- Timestamp -->
+        <field name="occurredAt" type="datetime_immutable" nullable="false" column="occurred_at"/>
+        
+        <!-- Indexes -->
+        <indexes>
+            <index name="idx_audit_user_id" columns="user_id"/>
+            <index name="idx_audit_action" columns="action"/>
+            <index name="idx_audit_entity" columns="entity_type,entity_id"/>
+            <index name="idx_audit_severity" columns="severity"/>
+            <index name="idx_audit_occurred_at" columns="occurred_at"/>
+        </indexes>
+        
+    </entity>
+    
+</doctrine-mapping>

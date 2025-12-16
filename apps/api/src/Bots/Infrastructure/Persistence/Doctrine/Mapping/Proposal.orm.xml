@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<doctrine-mapping xmlns="http://doctrine-project.org/schemas/orm/doctrine-mapping"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xsi:schemaLocation="http://doctrine-project.org/schemas/orm/doctrine-mapping
+                  https://www.doctrine-project.org/schemas/orm/doctrine-mapping.xsd">
+
+    <entity name="App\Bots\Domain\Model\Proposal" table="proposals" repository-class="App\Bots\Infrastructure\Persistence\Doctrine\ProposalDoctrineRepository">
+        
+        <!-- ID -->
+        <id name="id" type="string" column="id">
+            <generator strategy="NONE"/>
+        </id>
+        
+        <!-- Relations -->
+        <field name="userId" type="string" length="36" nullable="false" column="user_id"/>
+        <field name="strategyId" type="string" length="36" nullable="false" column="strategy_id"/>
+        
+        <!-- Trade Details -->
+        <field name="symbol" type="string" length="20" nullable="false" column="symbol"/>
+        <field name="side" type="string" length="10" nullable="false" column="side"/>
+        <field name="quantity" type="decimal" precision="20" scale="8" nullable="false" column="quantity"/>
+        <field name="limitPrice" type="decimal" precision=20" scale="8" nullable="true" column="limit_price"/>
+        <field name="status" type="string" length="20" nullable="false" column="status"/>
+        
+        <!-- Reasoning & Risk -->
+        <field name="rationale" type="text" nullable="false" column="rationale"/>
+        <field name="riskFactors" type="json" nullable="false" column="risk_factors"/>
+        <field name="riskScore" type="string" length="10" nullable="false" column="risk_score"/>
+        <field name="expectedReturn" type="string" length="20" nullable="true" column="expected_return"/>
+        <field name="stopLoss" type="decimal" precision="20" scale="8" nullable="true" column="stop_loss"/>
+        <field name="takeProfit" type="decimal" precision="20" scale="8" nullable="true" column="take_profit"/>
+        
+        <!-- Metadata -->
+        <field name="createdAt" type="datetime_immutable" nullable="false" column="created_at"/>
+        <field name="expiresAt" type="datetime_immutable" nullable="false" column="expires_at"/>
+        <field name="respondedAt" type="datetime_immutable" nullable="true" column="responded_at"/>
+        <field name="orderId" type="string" length="36" nullable="true" column="order_id"/>
+        
+        <!-- Indexes -->
+        <indexes>
+            <index name="idx_proposal_user_id" columns="user_id"/>
+            <index name="idx_proposal_strategy_id" columns="strategy_id"/>
+            <index name="idx_proposal_status" columns="status"/>
+            <index name="idx_proposal_expires_at" columns="expires_at"/>
+            <index name="idx_proposal_created_at" columns="created_at"/>
+        </indexes>
+        
+    </entity>
+    
+</doctrine-mapping>

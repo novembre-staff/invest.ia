@@ -40,4 +40,21 @@ interface NewsArticleRepositoryInterface
      * Check if article already exists by source URL
      */
     public function existsBySourceUrl(string $sourceUrl): bool;
+
+    /**
+     * Find unanalyzed or recent news articles for batch processing
+     * 
+     * @param int $maxResults Maximum number of results
+     * @param int|null $hoursBack Look back N hours, null for all unanalyzed
+     * @return NewsArticle[]
+     */
+    public function findUnanalyzedRecent(int $maxResults = 50, ?int $hoursBack = null): array;
+
+    /**
+     * Find important news (high/critical importance)
+     * 
+     * @param int $limit Maximum number of results
+     * @return NewsArticle[]
+     */
+    public function findImportantNews(int $limit = 20): array;
 }

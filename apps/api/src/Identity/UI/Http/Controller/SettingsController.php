@@ -34,12 +34,12 @@ class SettingsController extends AbstractController
                 );
             }
             
-            // Récupérer les préférences depuis le user
-            // Note: On devrait récupérer le User domain object, mais pour simplifier
-            // on va dispatcher une query ou récupérer depuis le repository
+            // Récupérer les préférences depuis le user domain object
+            // Note: Dans une implémentation complète, on utiliserait une Query
+            // pour récupérer uniquement les préférences sans charger tout le User
             
-            // Pour l'instant, retourner les valeurs par défaut en exemple
-            // TODO: Récupérer les vraies préférences du user via repository
+            // Simulation des préférences (à remplacer par query réelle)
+            $preferences = \App\Identity\Domain\ValueObject\UserPreferences::default();
             
             return new JsonResponse([
                 'reportingCurrency' => 'USD',

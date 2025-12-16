@@ -475,6 +475,235 @@ Modifier notifications.
 
 ---
 
+## News & Sentiment Analysis ✨
+
+### GET /api/news
+Liste des actualités.
+
+**Query params**:
+- `category`: crypto|stocks|markets|regulation
+- `symbols`: BTC,ETH (filter by symbols)
+- `importance`: low|medium|high|critical
+- `sentiment`: very_negative|negative|neutral|positive|very_positive
+- `limit`: int (default: 20)
+- `offset`: int (default: 0)
+
+**Response**:
+```json
+{
+  "items": [
+    {
+      "id": "uuid",
+      "title": "Bitcoin breaks $100k milestone",
+      "summary": "Historic achievement as BTC reaches...",
+      "content": "Full article content...",
+      "source": "CoinDesk",
+      "sourceUrl": "https://...",
+      "category": "crypto",
+      "relatedSymbols": ["BTC", "ETH"],
+      "importance": 8.5,
+      "sentiment": {
+        "label": "very_positive",
+        "score": 0.85,
+        "confidence": 0.92
+      },
+      "publishedAt": "2025-12-16T10:30:00Z",
+      "analyzedAt": "2025-12-16T10:31:00Z",
+      "isHighImpact": true
+    }
+  ],
+  "total": 150,
+  "limit": 20,
+  "offset": 0
+}
+```
+
+### GET /api/news/{id}
+Détail d'une actualité.
+
+**Response**:
+```json
+{
+  "id": "uuid",
+  "title": "Bitcoin breaks $100k milestone",
+  "summary": "Historic achievement...",
+  "content": "Full article content with detailed analysis...",
+  "source": "CoinDesk",
+  "sourceUrl": "https://coindesk.com/...",
+  "category": "crypto",
+  "relatedSymbols": ["BTC", "ETH"],
+  "importanceScore": 8.5,
+  "sentiment": {
+    "label": "very_positive",
+    "score": 0.85,
+    "confidence": 0.92
+  },
+  "publishedAt": "2025-12-16T10:30:00Z",
+  "analyzedAt": "2025-12-16T10:31:00Z",
+  "isHighImpact": true,
+  "imageUrl": "https://..."
+}
+```
+
+### GET /api/news/important
+Actualités importantes non lues.
+
+**Response**:
+```json
+{
+  "success": true,
+  "data": [
+    {
+      "id": "uuid",
+      "title": "SEC approves Bitcoin ETF",
+      "summary": "Major regulatory milestone...",
+      "source": "Bloomberg",
+      "url": "https://...",
+      "category": "regulation",
+      "symbols": ["BTC"],
+      "importance": 9.5,
+      "sentiment": {
+        "label": "very_positive",
+        "score": 0.92,
+        "confidence": 0.95
+      },
+      "published_at": "2025-12-16T09:00:00Z",
+      "is_high_impact": true
+    }
+  ],
+  "count": 5
+}
+```
+
+### POST /api/news/{id}/analyze
+Déclencher l'analyse de sentiment d'une actualité.
+
+**Headers**:
+- `Authorization: Bearer {token}`
+
+**Response** (202 Accepted):
+```json
+{
+  "success": true,
+  "message": "Sentiment analysis started",
+  "news_id": "uuid"
+}
+```
+
+**Erreurs**:
+- `404`: Article non trouvé
+- `400`: Article déjà analysé récemment
+
+### POST /api/news/analyze-batch
+Analyser plusieurs actualités en batch.
+
+**Request**:
+```json
+{
+  "news_ids": ["uuid1", "uuid2", "uuid3"]
+}
+```
+
+**Response** (202 Accepted):
+```json
+{
+  "success": true,
+  "message": "Analysis started for 3 articles",
+  "count": 3
+}
+```
+
+**Erreurs**:
+- `400`: Liste vide ou invalide
+- `422`: Certains IDs invalides
+
+---
+
+## Alertes & Notifications
+
+### GET /api/alerts
+Liste des alertes de l'utilisateur.
+
+**Query params**:
+- `type`: price|news|risk|bot_action|position_change
+- `status`: active|triggered|dismissed
+- `limit`: int
+- `offset`: int
+
+**Response**:
+```json
+{
+  "items": [
+    {
+      "id": "uuid",
+      "type": "news",
+      "title": "Important News Alert",
+      "message": "Bitcoin breaks $100k...",
+      "importance": "critical",
+      "triggeredAt": "2025-12-16T10:30:00Z",
+      "status": "triggered",
+      "metadata": {
+        "news_id": "uuid",
+        "symbols": ["BTC"],
+        "sentiment": "very_positive"
+      }
+    }
+  ],
+  "total": 25,
+  "unread": 5
+}
+```
+
+### POST /api/alerts/{id}/dismiss
+Marquer une alerte comme lue.
+
+### GET /api/alerts/preferences
+Préférences d'alertes de l'utilisateur.
+
+**Response**:
+```json
+{
+  "newsAlertsEnabled": true,
+  "priceAlertsEnabled": true,
+  "riskAlertsEnabled": true,
+  "botActionsAlertsEnabled": true,
+  "channels": {
+    "email": true,
+    "push": true,
+    "sms": false,
+    "discord": true,
+    "telegram": false
+  },
+  "importanceThreshold": "high"
+}
+```
+
+### PUT /api/alerts/preferences
+Modifier les préférences d'alertes.
+
+**Request**:
+```json
+{
+  "newsAlertsEnabled": true,
+  "channels": {
+    "email": true,
+    "push": true,
+    "sms": true
+  },
+  "importanceThreshold": "medium"
+}
+```
+
+**Response** (200):
+```json
+{
+  "success": true,
+  "message": "Preferences updated"
+}
+```
+
+---
+
 ## Codes d'erreur
 
 - `400` : Bad Request
